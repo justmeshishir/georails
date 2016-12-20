@@ -1,0 +1,6 @@
+<%= simple_form_for Location.new do |f| %>
+    <%= f.input :longitude %>
+    <%= f.input :latitude %>
+    <%= f.input :address %>
+    <%= f.submit 'Search', class: 'btn btn-default btn-block' %>
+<% end %>
