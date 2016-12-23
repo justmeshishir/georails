@@ -1,10 +1,6 @@
 class LocationsController < ApplicationController
     def index
         @location = Location.all
-        @hash = Gmaps4rails.build_markers(@location) do |location, marker|
-          marker.lat location.latitude
-          marker.lng location.longitude
-        end
     end
     
     def new
@@ -12,11 +8,16 @@ class LocationsController < ApplicationController
     end
     
     def create
-        @location = Location.create(location_params) 
-        if @location.valid?
-        redirect_to root_path
-        else
-        render :new, status: :unprocessable_entity
+        @location = Location.new(location_params) 
+        
+        respond_to do |format|
+            if @location.save
+                format.html { redirect_to @location }
+                format.json { render :show, status: :created, location: @location }
+            else
+                format.html { render :new }
+                format.json { render json: @locatio.errors, status: :unprocessable_entity }
+            end
         end
     end
     

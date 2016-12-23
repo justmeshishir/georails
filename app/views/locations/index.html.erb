@@ -1,23 +1,44 @@
 
-<%= link_to 'Create new location', new_location_path, 'data-no-turbolink' => true %> 
+<%= link_to 'Create new location', new_location_path %> 
 <% @location.each do |loc| %>
     Address: <%= loc.address %><br /><br />
     Longitude: <%= loc.longitude %><br /><br />
     Latitude: <%= loc.latitude %><br /><br />
 <% end %>
 
-<div style='width: 800px;'>
-  <div id="map" style='width: 800px; height: 400px;'>
-      
-  </div>
-</div>
+<br />
+<br />
+<div id="map" style="width: 500px; height: 400px;"></div>
 
-<style type="text/javascript">
-handler = Gmaps.build('Google');
-handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
-  markers = handler.addMarkers(<%=raw @hash.to_json %>);
-  handler.bounds.extendWith(markers);
-  handler.fitMapToBounds();
-});
-window.onload = function() { Gmaps.loadMaps(); };
-</style>
+  <script type="text/javascript">
+ 
+    let locations = [
+      ['<%= @location[0].address %>', '<%= @location[0].latitude %>','<%= @location[0].longitude %>'],
+      ['<%= @location[1].address %>', '<%= @location[1].latitude %>','<%= @location[1].longitude %>'],
+      ['<%= @location[2].address %>', '<%= @location[2].latitude %>','<%= @location[2].longitude %>']
+    ];
+    
+    let map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 7,
+      center: new google.maps.LatLng('<%= request.location.latitude %>', '<%= request.location.longitude %>'),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    let infowindow = new google.maps.InfoWindow();
+
+    let marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+  </script>
