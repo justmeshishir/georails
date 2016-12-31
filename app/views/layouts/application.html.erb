@@ -6,16 +6,29 @@
   <%= stylesheet_link_tag    'gmaps4rails' %>
   <script src="//maps.google.com/maps/api/js?key=AIzaSyDiYySheT8tewQCvxl3UoRH-i2ys2IVt0M"></script> 
   <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
-  
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
- 
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Brand</a>
+    </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><%= link_to 'Create new location', new_location_path %> </li>
+      </ul>
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+  <%= yield %>
+</div>
 </body>
 </html>
-
-<!-- http://stackoverflow.com/questions/16112179/unable-to-render-gmaps4rails-map -->

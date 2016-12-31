@@ -1,44 +1,68 @@
-
-<%= link_to 'Create new location', new_location_path %> 
-<% @location.each do |loc| %>
-    Address: <%= loc.address %><br /><br />
-    Longitude: <%= loc.longitude %><br /><br />
-    Latitude: <%= loc.latitude %><br /><br />
-<% end %>
-
+<table class="table table-striped">
+  <thead>
+    <td><strong>Address</strong></td>
+    <td><strong>Latitude</strong></td>
+    <td><strong>Longitude</strong></td>
+  </thead>
+  <% @location.each do |loc| %>
+    <tr>
+      <td><%= loc.address %></td>
+      <td><%= loc.latitude %></td>
+      <td><%= loc.longitude %></td>
+      <td><%= link_to '', location_path(id: loc.id), class:"glyphicon glyphicon-trash", method: :delete, data: {confirm: "Are you sure?"} %></td>
+    </tr>
+  <% end %>
+</table>
 <br />
 <br />
-<div id="map" style="width: 500px; height: 400px;"></div>
-
+<div id="map" class="container" style="width: 100%; height: 500px;"></div>
   <script type="text/javascript">
- 
-    let locations = [
-      ['<%= @location[0].address %>', '<%= @location[0].latitude %>','<%= @location[0].longitude %>'],
-      ['<%= @location[1].address %>', '<%= @location[1].latitude %>','<%= @location[1].longitude %>'],
-      ['<%= @location[2].address %>', '<%= @location[2].latitude %>','<%= @location[2].longitude %>']
-    ];
-    
-    let map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 7,
-      center: new google.maps.LatLng('<%= request.location.latitude %>', '<%= request.location.longitude %>'),
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+   $.ajax({
+      url: "/map.json",
+      type: "GET"
+    })
+    .done(function(data){
+      displayLocation(data);
     });
-
-    let infowindow = new google.maps.InfoWindow();
-
-    let marker, i;
-
-    for (i = 0; i < locations.length; i++) {  
-      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-        map: map
+    
+    function displayLocation(dataObject){
+      let locations = [];
+      console.log(dataObject[0].longitude);
+      for( var x=0; x < dataObject.length; x++ ) {
+        locations.push( [] );
+      }
+      
+      // expand all rows to have the correct amount of cols
+      for(var x=0; x < dataObject.length; x++)
+      {
+        locations[x][0] = dataObject[x].address;
+        locations[x][1] = dataObject[x].latitude;
+        locations[x][2] = dataObject[x].longitude;
+      }
+      console.log(locations);
+      let map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: new google.maps.LatLng('<%= request.location.latitude %>', '<%= request.location.longitude %>'),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
       });
-
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infowindow.setContent(locations[i][0]);
-          infowindow.open(map, marker);
-        }
-      })(marker, i));
+  
+      let infowindow = new google.maps.InfoWindow();
+  
+      let marker, i;
+     
+      for (i = 0; i < locations.length; i++) {  
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+          map: map
+        });
+        console.log(marker);
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            infowindow.setContent(locations[i][0]);
+            infowindow.open(map, marker);
+          }
+        })(marker, i));
+      }
     }
+    
   </script>

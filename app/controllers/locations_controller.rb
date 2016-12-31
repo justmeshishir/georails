@@ -1,6 +1,10 @@
 class LocationsController < ApplicationController
     def index
         @location = Location.all
+        respond_to do |format|
+            format.html { render :index }
+            format.json { render json: @location }
+        end
     end
     
     def new
@@ -13,7 +17,7 @@ class LocationsController < ApplicationController
         respond_to do |format|
             if @location.save
                 format.html { redirect_to @location }
-                format.json { render :show, status: :created, location: @location }
+                format.json { render :index, status: :created, location: @location }
             else
                 format.html { render :new }
                 format.json { render json: @locatio.errors, status: :unprocessable_entity }
@@ -25,6 +29,15 @@ class LocationsController < ApplicationController
       @location = Location.find(params[:id])  
     end
     
+    def destroy
+       @location = Location.find(params[:id])
+       @location.destroy
+       redirect_to root_path
+    end
+    
+    def map
+       @location = Location.all 
+    end
     private
     
     def location_params
