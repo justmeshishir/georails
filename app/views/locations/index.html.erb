@@ -15,6 +15,9 @@
 </table>
 <br />
 <br />
+<div class="page-header">
+  <h1>You are somewhere here right now.. <small>Where do you want to go?</small></h1>
+</div>
 <div id="map" class="container-fluid panel panel-success" style="width: 100%; height: 500px;"></div>
   <script type="text/javascript">
    $.ajax({
@@ -24,6 +27,8 @@
     .done(function(data){
       displayLocation(data);
     });
+    
+    var styles = [{"featureType":"all","elementType":"all","stylers":[{"invert_lightness":true},{"saturation":10},{"lightness":30},{"gamma":0.5},{"hue":"#00aaff"}]},{"featureType":"administrative.province","elementType":"geometry.stroke","stylers":[{"saturation":"100"},{"lightness":"27"}]},{"featureType":"landscape","elementType":"geometry.fill","stylers":[{"color":"#32373c"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"saturation":"100"},{"lightness":"69"},{"gamma":"1.40"}]},{"featureType":"road.highway","elementType":"labels.text.fill","stylers":[{"lightness":"100"},{"saturation":"100"}]},{"featureType":"road.highway.controlled_access","elementType":"labels.icon","stylers":[{"saturation":"100"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"saturation":"43"},{"lightness":"51"}]},{"featureType":"road.arterial","elementType":"labels.text.fill","stylers":[{"saturation":"45"},{"lightness":"19"}]}]
     
     function displayLocation(dataObject){
       let locations = [];
@@ -43,17 +48,26 @@
       let map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: new google.maps.LatLng('<%= request.location.latitude %>', '<%= request.location.longitude %>'),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        styles: styles
       });
   
       let infowindow = new google.maps.InfoWindow();
   
       let marker, i;
-     
+      
+      var icon = {
+        url: 'http://files.softicons.com/download/web-icons/vista-map-markers-icons-by-icons-land/png/256x256/MapMarker_Marker_Outside_Azure.png',
+        scaledSize: new google.maps.Size(50, 50), // scaled size
+        origin: new google.maps.Point(0,0), // origin
+        anchor: new google.maps.Point(0, 0) // anchor
+      };
+      
       for (i = 0; i < locations.length; i++) {  
         marker = new google.maps.Marker({
           position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-          map: map
+          map: map,
+          icon: icon
         });
         console.log(marker);
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -65,4 +79,13 @@
       }
     }
     
+    if(navigator.geolocation)
+    {
+      navigator.geolocation.getCurrentPosition(function(position){
+        console.log(position);
+      });
+    }
+    else{
+      console.log("Boom");
+    }
   </script>
