@@ -16,11 +16,11 @@ class LocationsController < ApplicationController
         
         respond_to do |format|
             if @location.save
-                format.html { redirect_to @location }
-                format.json { render :index, status: :created, location: @location }
+                format.html { redirect_to root_path }
+                format.json { render :index, status: :created, location: root_path }
             else
                 format.html { render :new }
-                format.json { render json: @locatio.errors, status: :unprocessable_entity }
+                format.json { render json: root_path.errors, status: :unprocessable_entity }
             end
         end
     end

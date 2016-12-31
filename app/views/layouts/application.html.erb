@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Workspace</title>
+  <title>Georails | Pin your favourite locations all in one place</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= stylesheet_link_tag    'gmaps4rails' %>
+  <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Lemonada" rel="stylesheet">
   <script src="//maps.google.com/maps/api/js?key=AIzaSyDiYySheT8tewQCvxl3UoRH-i2ys2IVt0M"></script> 
   <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
@@ -20,15 +20,43 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Brand</a>
+      <%= link_to image_tag("georails.png", alt: "logo"), '/', class: 'navbar-brand', id:"logo" %>
+      <%= link_to "Georails", '#', id: "prov", class: 'navbar-brand' %>
     </div>
       <ul class="nav navbar-nav navbar-right">
-        <li><%= link_to 'Create new location', new_location_path %> </li>
+       <li><button type="button" id="addLocation" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+  Add Location
+</button></li>
       </ul>
   </div><!-- /.container-fluid -->
 </nav>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add a new Location</h4>
+      </div>
+      <div class="modal-body">
+        <div class="modal-body">
+        <%= simple_form_for Location.new do |f| %>
+          <%= f.input :address %>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit 'Search', class: 'btn btn-info' %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <%= yield %>
+</div>
+
+<div class="footer text-center">
+   <p>A creation of SHISHIR THAPA <%= Date.today.year %><br /> All Rights Reserved</p>
 </div>
 </body>
 </html>
