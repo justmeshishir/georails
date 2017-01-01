@@ -1,6 +1,6 @@
 class LocationsController < ApplicationController
     def index
-        @location = Location.all
+        @locations = Location.all
         respond_to do |format|
             format.html { render :index }
             format.json { render json: @location }
@@ -18,9 +18,11 @@ class LocationsController < ApplicationController
             if @location.save
                 format.html { redirect_to root_path }
                 format.json { render :index, status: :created, location: root_path }
+                format.js
             else
                 format.html { render :new }
                 format.json { render json: root_path.errors, status: :unprocessable_entity }
+                format.js
             end
         end
     end

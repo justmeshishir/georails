@@ -39,8 +39,8 @@
       </div>
       <div class="modal-body">
         <div class="modal-body">
-        <%= simple_form_for Location.new do |f| %>
-          <%= f.input :address %>
+        <%= simple_form_for Location.new, remote: true do |f| %>
+          <%= f.input :address, class:"addressName" %>
       </div>
       </div>
       <div class="modal-footer">
