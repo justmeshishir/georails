@@ -19,15 +19,17 @@
   <h1>You are somewhere here right now.. <small>Where do you want to go?</small></h1>
 </div>
 <div class="direction">
-  <%= simple_form_for Location.new do |f| %>
-    <%= f.input :id, collection: @locations, label_method: :address, label: 'From', include_blank: false %>
-    <%= f.input :id, collection: @locations, label_method: :address, label: 'To', include_blank: false %>
-  <%= f.submit 'Find Direction' %>
-  <% end %>
-   
 </div>
 <div id="map" class="container-fluid panel panel-success" style="width: 100%; height: 500px;"></div>
   <script type="text/javascript">
+  
+  function findDirection()
+  {
+    let from = $("#from").val();
+    let from = $("#to").val();
+    alert(from + to);
+  }
+  
    $.ajax({
       url: "/map.json",
       type: "GET"
@@ -40,7 +42,7 @@
     
     function displayLocation(dataObject){
       let locations = [];
-      console.log(dataObject[0].longitude);
+      console.log(dataObject);
       for( var x=0; x < dataObject.length; x++ ) {
         locations.push( [] );
       }

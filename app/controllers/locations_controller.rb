@@ -3,7 +3,7 @@ class LocationsController < ApplicationController
         @locations = Location.all
         respond_to do |format|
             format.html { render :index }
-            format.json { render json: @location }
+            format.json { render json: @locations }
         end
     end
     
@@ -16,10 +16,12 @@ class LocationsController < ApplicationController
         
         respond_to do |format|
             if @location.save
+                flash[:success] = "Location has been saved!"
                 format.html { redirect_to root_path }
                 format.json { render :index, status: :created, location: root_path }
                 format.js
             else
+                flash[:alert] = "Please enter a valid location!"
                 format.html { render :new }
                 format.json { render json: root_path.errors, status: :unprocessable_entity }
                 format.js
@@ -33,13 +35,12 @@ class LocationsController < ApplicationController
     
     def destroy
        @location = Location.find(params[:id])
-       @location.destroy
-       redirect_to root_path
+       if @location.destroy
+        flash[:alert] = "Location has deleted successfully!"
+        redirect_to root_path
+       end 
     end
-    
-    def map
-       @location = Location.all 
-    end
+   
     private
     
     def location_params
