@@ -19,16 +19,47 @@
   <h1>You are somewhere here right now.. <small>Where do you want to go?</small></h1>
 </div>
 <div class="direction">
+  <b>From:</b>
+  <select id="from">
+    <% @locations.each do |loc| %>
+      <option><%= loc.address %></option>
+    <% end %>
+  </select>
+  <b>To:</b>
+  <select id="to">
+    <% @locations.each do |loc| %>
+      <option><%= loc.address %></option>
+    <% end %>
+  </select>
+  <button type="submit" id="button-direction" class="btn btn-success btn-sm" onclick="findDirection();">Find Direction</button>
 </div>
+<br /><br />
 <div id="map" class="container-fluid panel panel-success" style="width: 100%; height: 500px;"></div>
   <script type="text/javascript">
-  
-  function findDirection()
-  {
-    let from = $("#from").val();
-    let from = $("#to").val();
-    alert(from + to);
-  }
+    function findDirection()
+    {
+      let from = $("#from").find(":selected").text();
+      let to = $("#to").find(":selected").text();
+      var directionsService = new google.maps.DirectionsService;
+      var directionsDisplay = new google.maps.DirectionsRenderer;
+      let map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 13,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          styles: styles
+        });
+      directionsDisplay.setMap(map);
+      var request = {
+        origin: from,
+        destination: to,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.DRIVING
+      };
+      directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+        }
+      });
+    }
   
    $.ajax({
       url: "/map.json",
@@ -54,7 +85,6 @@
         locations[x][1] = dataObject[x].latitude;
         locations[x][2] = dataObject[x].longitude;
       }
-      console.log(locations);
       let map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: new google.maps.LatLng('<%= request.location.latitude %>', '<%= request.location.longitude %>'),
@@ -89,13 +119,13 @@
       }
     }
     
-    if(navigator.geolocation)
-    {
-      navigator.geolocation.getCurrentPosition(function(position){
-        console.log(position);
-      });
-    }
-    else{
-      console.log("Boom");
-    }
+    // if(navigator.geolocation)
+    // {
+    //   navigator.geolocation.getCurrentPosition(function(position){
+    //     console.log(position);
+    //   });
+    // }
+    // else{
+    //   console.log("Boom");
+    // }
   </script>
